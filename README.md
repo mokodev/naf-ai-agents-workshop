@@ -52,30 +52,36 @@ This comprehensive workshop teaches network security engineers how to build AI-p
 ### Key Features
 
 **11 comprehensive notebooks**
+
 - Progressive learning from TypedDict basics to Human-in-the-Loop patterns
 - Each notebook builds on previous concepts with hands-on exercises
 
 **Real SCM integration**
+
 - Address objects, address groups, and tags
 - Security rules and NAT policies
 - Production-ready API patterns with pan-scm-sdk
 
 **Progressive complexity**
+
 - Start with single-node graphs
 - Build to multi-tool AI agents
 - Master conditional routing and loops
 
 **Cost-aware design**
+
 - Phase 1 notebooks (101-107) use mock data - no API costs
 - Phase 2 notebooks (108-111) optional LLM integration
 - Learn fundamentals before spending on AI
 
 **Production patterns**
+
 - Error handling and validation
 - State management best practices
 - Retry logic and pagination
 
 **Complete documentation**
+
 - Detailed notebook summaries
 - Comprehensive setup guides
 - Real-world SCM examples
@@ -416,10 +422,10 @@ make help                  # Show all available commands
 | # | Notebook | Duration | Format | Topics |
 |---|----------|----------|--------|--------|
 | **101** | [Type Annotations](notebooks/101_type_annotations.ipynb) | ~10-15 min | Demo | TypedDict essentials for LangGraph |
-| **102** | [Core Concepts](notebooks/102_core_concepts.ipynb) | ~25 min | Hands-on | State, Nodes, Graphs, Edges |
+| **102** | [Core Concepts](notebooks/102_core_concepts.ipynb) | ~25 min | Hands-on | State, Nodes, Graphs, Edges (streamlined) |
 | **103** | [Your First Graph](notebooks/103_your_first_graph.ipynb) | ~15 min | Demo | Building single-node graphs |
-| **104** | [State Management](notebooks/104_state_management.ipynb) | ~25 min | Hands-on | Complex multi-field states |
-| **106** | [Sequential + Conditional Routing](notebooks/106_conditional_routing.ipynb) | ~35-40 min | Hands-on | Sequential basics + conditional routing |
+| **104** | [State Management](notebooks/104_state_management.ipynb) | ~25 min | Hands-on | Complex multi-field states (streamlined) |
+| **106** | [Conditional Routing](notebooks/106_conditional_routing.ipynb) | ~30-35 min | Hands-on | Conditional routing patterns |
 
 **Phase 2 - LLM Integration (API Key Required)**
 
@@ -428,7 +434,7 @@ make help                  # Show all available commands
 | **108** | [First LLM Integration](notebooks/108_first_llm_integration.ipynb) | ~20-25 min | Demo | Claude integration, simple bots |
 | **110** | [ReAct Agents with Tools](notebooks/110_react_agents_with_tools.ipynb) | ~30-35 min | Demo | Tools, reducers, ReAct pattern (capstone) |
 
-**Total Workshop Time**: ~160-190 minutes + breaks = **3-3.5 hours**
+**Total Workshop Time**: ~155-180 minutes + breaks = **3.1-3.5 hours**
 
 ### Self-Study Notebooks (4 notebooks, for mastery)
 
@@ -578,12 +584,15 @@ make help                  # Show all available commands
 - Router functions decide path without modifying state
 - Lambda passthrough pattern for router nodes
 - Path maps connect edge names to destination nodes
+- Sequential patterns assumed from notebook 102
 
 **Hands-On:**
 
 - Build configuration change router (3-way routing)
 - Implement environment-based routing (dev/stage/prod)
 - Create address type validator with 3 validation paths
+
+**Note**: This notebook focuses exclusively on conditional routing. Sequential workflow patterns are assumed knowledge from notebook 102.
 
 </details>
 
@@ -739,10 +748,10 @@ make help                  # Show all available commands
 
 **Notebooks**: 106 (No API Key Required)
 
-- **106** (35-40 min): Sequential + Conditional routing - Hands-on
-- Buffer: 10 min
+- **106** (30-35 min): Conditional routing - Hands-on
+- Buffer: 15 min
 
-**What You'll Learn**: Sequential patterns (basics from 105), conditional routing
+**What You'll Learn**: Conditional routing patterns (sequential patterns assumed from 102)
 
 #### Break (3:00-3:15, 15 min)
 
@@ -761,10 +770,10 @@ make help                  # Show all available commands
 **Express Workshop Checklist:**
 
 - [ ] 101: TypedDict essentials
-- [ ] 102: Core concepts (State, Nodes, Graphs, Edges)
+- [ ] 102: Core concepts (State, Nodes, Graphs, Edges) - streamlined
 - [ ] 103: First single-node graph
-- [ ] 104: Complex multi-field states
-- [ ] 106: Sequential basics + conditional routing
+- [ ] 104: Complex multi-field states - streamlined
+- [ ] 106: Conditional routing patterns
 - [ ] 108: First LLM integration
 - [ ] 110: ReAct agents with tools
 
@@ -931,13 +940,13 @@ Email: [calvin@cdot.io](mailto:calvin@cdot.io)
 
 ## 📋 Workshop Completion Checklist
 
-### Express Workshop (3-4 Hours) ✓
+### Express Workshop (3.1-3.5 Hours) ✓
 
 - [ ] 101: Type Annotations - TypedDict essentials
-- [ ] 102: Core Concepts - State, Nodes, Edges, Graphs
+- [ ] 102: Core Concepts - State, Nodes, Edges, Graphs (streamlined)
 - [ ] 103: Your First Graph - Single-node workflow
-- [ ] 104: State Management - Complex multi-field states
-- [ ] 106: Routing - Sequential basics + conditional routing
+- [ ] 104: State Management - Complex multi-field states (streamlined)
+- [ ] 106: Conditional Routing - Decision-making workflows
 - [ ] 108: First LLM - Claude integration demo
 - [ ] 110: ReAct Agents - Tools, reducers, capstone
 
