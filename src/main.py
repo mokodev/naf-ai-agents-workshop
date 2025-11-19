@@ -30,8 +30,16 @@ Example Prompts:
 - "Commit changes to Texas and California"
 """
 
-import uuid
+import warnings
 from typing import Literal
+
+# Suppress LangSmith UUID v7 warning from Pydantic v1 (internal to LangChain)
+warnings.filterwarnings(
+    "ignore",
+    message="LangSmith now uses UUID v7",
+    category=UserWarning,
+    module="pydantic.v1.main",
+)
 
 from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -39,6 +47,7 @@ from langchain_core.tools import StructuredTool
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.prebuilt import ToolNode
+from langsmith import uuid7
 from pydantic import BaseModel, Field
 from scm.exceptions import ObjectNotPresentError
 
@@ -142,6 +151,10 @@ def _tag_create_batch(request: BatchTagRequest) -> str:
             config_dict = tag_config.model_dump()
             config_dict["folder"] = request.folder
 
+            # Remove empty comments field to avoid API validation error
+            if not config_dict.get("comments"):
+                config_dict.pop("comments", None)
+
             # Create
             tag = client.tag.create(config_dict)
             results.append(f"✅ {tag.name} ({tag.color})")
@@ -193,6 +206,12 @@ def _address_create_batch(request: BatchAddressRequest) -> str:
             # Convert Pydantic model to dict and add folder
             config_dict = addr_config.model_dump()
             config_dict["folder"] = request.folder
+
+            # Remove empty optional fields to avoid API validation errors
+            if not config_dict.get("description"):
+                config_dict.pop("description", None)
+            if not config_dict.get("tag"):
+                config_dict.pop("tag", None)
 
             # Create
             addr = client.address.create(config_dict)
@@ -262,9 +281,13 @@ def _address_group_create_batch(request: BatchAddressGroupRequest) -> str:
                 "name": group_config.name,
                 "static": group_config.members,
                 "folder": request.folder,
-                "description": group_config.description,
-                "tag": group_config.tag,
             }
+
+            # Only include optional fields if non-empty
+            if group_config.description:
+                config_dict["description"] = group_config.description
+            if group_config.tag:
+                config_dict["tag"] = group_config.tag
 
             # Create
             group = client.address_group.create(config_dict)
@@ -299,9 +322,13 @@ def _tag_create(name: str, color: str, folder: str, comments: str = "") -> str:
             return f"❌ Tag '{name}' already exists in '{folder}' (ID: {existing.id})"
         except ObjectNotPresentError:
             pass
-        tag = client.tag.create(
-            {"name": name, "color": color, "folder": folder, "comments": comments}
-        )
+
+        # Build config dict - only include comments if non-empty
+        config = {"name": name, "color": color, "folder": folder}
+        if comments:
+            config["comments"] = comments
+
+        tag = client.tag.create(config)
         return f"✅ Created tag '{tag.name}' ({tag.color}) in '{folder}' (ID: {tag.id})"
     except Exception as e:
         return f"❌ Failed: {type(e).__name__}: {str(e)}"
@@ -348,16 +375,17 @@ def _address_create(
             )
         except ObjectNotPresentError:
             pass
+
+        # Build config dict - only include optional fields if non-empty
+        config = {"name": name, "ip_netmask": ip_netmask, "folder": folder}
+        if description:
+            config["description"] = description
+
         tag_list = [t.strip() for t in tags.split(",")] if tags else []
-        addr = client.address.create(
-            {
-                "name": name,
-                "ip_netmask": ip_netmask,
-                "folder": folder,
-                "description": description,
-                "tag": tag_list,
-            }
-        )
+        if tag_list:
+            config["tag"] = tag_list
+
+        addr = client.address.create(config)
         return f"✅ Created address '{addr.name}' ({addr.ip_netmask}) in '{folder}' (ID: {addr.id})"
     except Exception as e:
         return f"❌ Failed: {type(e).__name__}: {str(e)}"
@@ -916,7 +944,7 @@ Single Operation Examples:
             )
             print("Type 'exit' or 'quit' to end.\n")
 
-            thread_id = args.thread_id or str(uuid.uuid4())
+            thread_id = args.thread_id or str(uuid7())
             print(f"Session ID: {thread_id}")
             print(f"Recursion Limit: {args.recursion_limit}\n")
 
@@ -969,7 +997,7 @@ Single Operation Examples:
                 sys.exit(1)
 
             config = {
-                "configurable": {"thread_id": args.thread_id or str(uuid.uuid4())},
+                "configurable": {"thread_id": args.thread_id or str(uuid7())},
                 "recursion_limit": args.recursion_limit,
             }
 
@@ -1000,7 +1028,7 @@ Single Operation Examples:
             print(f"🤖 Processing: {args.prompt}\n")
 
             config = {
-                "configurable": {"thread_id": args.thread_id or str(uuid.uuid4())},
+                "configurable": {"thread_id": args.thread_id or str(uuid7())},
                 "recursion_limit": args.recursion_limit,
             }
 
